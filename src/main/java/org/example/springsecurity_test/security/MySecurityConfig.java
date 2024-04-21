@@ -28,6 +28,7 @@ public class MySecurityConfig {
                 .formLogin(Customizer.withDefaults())
 
                 .authorizeHttpRequests(request -> request
+                        .requestMatchers("/register").permitAll()
                         .anyRequest().authenticated()
                 )
 
