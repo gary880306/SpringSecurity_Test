@@ -10,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -33,10 +35,19 @@ public class MySecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 )
-                .csrf(csrf -> csrf.disable())
 
+                // 設定 CSRF 保護
+                // .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(createCsrfHandler())
+                        .ignoringRequestMatchers("/register","/userLogin")
+                )
+
+                // 設定 CORS 跨域
                 .cors(cors -> cors.configurationSource(createCorsConfig()))
 
+                // 添加客製化 Filter
                 .addFilterBefore(new MyFilter(), BasicAuthenticationFilter.class)
 
                 .httpBasic(Customizer.withDefaults())
@@ -60,6 +71,13 @@ public class MySecurityConfig {
                 )
 
                 .build();
+    }
+
+    private CsrfTokenRequestAttributeHandler createCsrfHandler(){
+        CsrfTokenRequestAttributeHandler csrfHandler = new CsrfTokenRequestAttributeHandler();
+        csrfHandler.setCsrfRequestAttributeName(null);
+
+        return csrfHandler;
     }
 
     private CorsConfigurationSource createCorsConfig(){
