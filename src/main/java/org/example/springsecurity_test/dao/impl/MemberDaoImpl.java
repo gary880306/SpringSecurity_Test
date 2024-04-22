@@ -2,7 +2,9 @@ package org.example.springsecurity_test.dao.impl;
 
 import org.example.springsecurity_test.dao.MemberDao;
 import org.example.springsecurity_test.model.Member;
+import org.example.springsecurity_test.model.Role;
 import org.example.springsecurity_test.rowmapper.MemberRowMapper;
+import org.example.springsecurity_test.rowmapper.RoleRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -22,6 +24,9 @@ public class MemberDaoImpl implements MemberDao {
 
     @Autowired
     private MemberRowMapper memberRowMapper;
+
+    @Autowired
+    private RoleRowMapper roleRowMapper;
 
     @Override
     public Member getMemberByEmail(String email) {
@@ -56,5 +61,21 @@ public class MemberDaoImpl implements MemberDao {
         int memberId = keyHolder.getKey().intValue();
 
         return memberId;
+    }
+
+    @Override
+    public List<Role> getRolesByMemberId(Integer memberId) {
+        String sql = """
+                SELECT role.role_id, role.role_name FROM role
+                    JOIN member_has_role ON role.role_id = member_has_role.role_id
+                    WHERE member_has_role.member_id = :memberId
+                """;
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("memberId", memberId);
+
+        List<Role> roleList = namedParameterJdbcTemplate.query(sql, map, roleRowMapper);
+
+        return roleList;
     }
 }
