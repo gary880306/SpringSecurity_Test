@@ -44,6 +44,7 @@ public class MySecurityConfig {
                         .requestMatchers("/watchVipMovie").hasAnyRole("VIP_MEMBER","ADMIN")
                         .requestMatchers("/uploadMovie").hasAnyRole("MOVIE_MANAGER","ADMIN")
                         .requestMatchers("/deleteMovie").hasAnyRole("MOVIE_MANAGER","ADMIN")
+                        .requestMatchers("/subscribe","/unsubscribe").hasAnyRole("NORMAL_MEMBER","ADMIN")
 
                         .anyRequest().denyAll()
                 )

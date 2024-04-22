@@ -89,4 +89,15 @@ public class MemberDaoImpl implements MemberDao {
 
         namedParameterJdbcTemplate.update(sql, map);
     }
+
+    @Override
+    public void removeRoleFromMemberId(Integer memberId, Role role) {
+        String sql = "DELETE FROM member_has_role WHERE member_id = :memberId AND role_id = :roleId";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("memberId", memberId);
+        map.put("roleId", role.getRoleId());
+
+        namedParameterJdbcTemplate.update(sql, map);
+    }
 }
