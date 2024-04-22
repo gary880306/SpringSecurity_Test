@@ -4,7 +4,7 @@
 
 開發流程 : 會員功能實作 ( Authentication & Authorization ) ->  安全性保護 ( CORS & CSRF )
 
-使用工具 : PostMan , Intellij
+使用工具 : Postman , Intellij
 
 主要功能 : 
 
