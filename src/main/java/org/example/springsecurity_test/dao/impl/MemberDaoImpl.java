@@ -78,4 +78,15 @@ public class MemberDaoImpl implements MemberDao {
 
         return roleList;
     }
+
+    @Override
+    public void addRoleForMemberId(Integer memberId, Role role) {
+        String sql = "INSERT INTO member_has_role(member_id, role_id) VALUES (:memberId, :roleId)";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("memberId", memberId);
+        map.put("roleId", role.getRoleId());
+
+        namedParameterJdbcTemplate.update(sql, map);
+    }
 }

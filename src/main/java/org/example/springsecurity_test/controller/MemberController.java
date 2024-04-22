@@ -2,7 +2,9 @@ package org.example.springsecurity_test.controller;
 
 
 import org.example.springsecurity_test.dao.MemberDao;
+import org.example.springsecurity_test.dao.RoleDao;
 import org.example.springsecurity_test.model.Member;
+import org.example.springsecurity_test.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +21,9 @@ public class MemberController {
     private MemberDao memberDao;
 
     @Autowired
+    private RoleDao roleDao;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
     @PostMapping("/register")
     public String register(@RequestBody Member member){
@@ -26,6 +31,10 @@ public class MemberController {
         member.setPassword(hashedPassword);
 
         Integer memberId = memberDao.createMember(member);
+
+        // 預設每位用戶 role 為 ROLE_NORMAL_MEMBER
+        Role role = roleDao.getRoleByName("ROLE_NORMAL_MEMBER");
+        memberDao.addRoleForMemberId(memberId,role);
         return "註冊成功";
     }
 

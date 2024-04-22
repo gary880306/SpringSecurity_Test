@@ -13,4 +13,5 @@ public interface MemberDao {
 
     // 權限相關
     List<Role> getRolesByMemberId(Integer memberId);
+    void addRoleForMemberId(Integer memberId, Role role);
 }

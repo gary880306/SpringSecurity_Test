@@ -52,6 +52,14 @@ public class MemberControllerTest {
         mockMvc.perform(loginRequestBuilder)
                 .andExpect(status().is(200));
 
+        // 新帳號可以觀看免費電影
+        RequestBuilder freeRequestBuilder = MockMvcRequestBuilders
+                .post("/watchFreeMovie")
+                        .with(httpBasic("test3@gmail.com", "333"));
+
+        mockMvc.perform(loginRequestBuilder)
+                .andExpect(status().is(200));
+
     }
 
     @Test
